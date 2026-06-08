@@ -51,6 +51,8 @@ node cli.js generate -i ./my-project/findings/sample-findings.yaml -o ./my-proje
 ```bash
 node cli.js generate -i <file>          # Generate report from findings
 node cli.js validate -i <file>            # Validate findings against schema
+node cli.js skills list                   # List all available skills
+node cli.js skills info <name>            # Show metadata for a skill
 node cli.js theme list                    # List available themes
 node cli.js template list                 # List available templates
 node cli.js init -d <dir>                 # Initialize a new project
@@ -149,11 +151,22 @@ Run `node cli.js validate -i findings.yaml` to validate against the schema.
 
 ## AI Agent Support
 
-Each skill in `skills/` includes:
-- **`SKILL.md`** — Full workflow guide for Claude Code and similar agents
-- **`skill.yaml`** — Structured metadata for OpenCode and automated discovery
+This repository implements a universal skill auto-discovery protocol so AI agents (Claude Code, OpenCode, Cursor, etc.) can discover available capabilities without manual configuration.
 
-Agents can auto-discover skills by reading the `skills/` directory.
+**Discovery entry points:**
+- **`AGENTS.md`** — Universal instructions for any AI agent entering this repository
+- **`SKILLS_INDEX.yaml`** — Machine-readable canonical list of all 11 skills
+- **`SKILLS_INDEX.md`** — Human-readable skill table
+
+Each skill in `skills/` includes:
+- **`SKILL.md`** — Full system prompt and workflow guide
+- **`skill.yaml`** — Structured metadata, validation rules, and schemas
+
+**Adding a new skill?** Regenerate all index files:
+```bash
+npm run sync:skills
+```
+This updates `SKILLS_INDEX.yaml` and per-agent indices in `.agents/`, `.claude/`, and `.opencode/`.
 
 ---
 

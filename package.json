@@ -15,6 +15,7 @@
     "template": "node cli.js template",
     "init": "node cli.js init",
     "serve": "node cli.js serve",
+    "sync:skills": "node scripts/sync-skills.js",
     "install:global": "bash install.sh --global",
     "install:dev": "bash install.sh --dev",
     "test": "node --experimental-vm-modules node_modules/.bin/jest",

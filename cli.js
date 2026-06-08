@@ -277,6 +277,71 @@ templateCommand.action(async () => {
 });
 
 // ---------------------------------------------------------------------------
+// skills
+// ---------------------------------------------------------------------------
+
+const skillsCommand = program
+  .command('skills')
+  .description('Discover and inspect available skills');
+
+skillsCommand
+  .command('list')
+  .description('List all available skills')
+  .action(async () => {
+    const indexPath = join(__dirname, 'SKILLS_INDEX.yaml');
+    let index;
+    try {
+      const raw = readFileSync(indexPath, 'utf-8');
+      index = parseYaml(raw);
+    } catch {
+      console.error('Skills index not found. Run: node scripts/sync-skills.js');
+      process.exit(1);
+    }
+    console.log(`Available skills (${index.total_skills}):`);
+    console.log('');
+    for (const s of index.skills) {
+      const tags = s.tags?.slice(0, 3).join(', ') || '';
+      const tagStr = tags ? `  [${tags}]` : '';
+      console.log(`  ${s.name.padEnd(30)} ${s.description.slice(0, 60)}${tagStr}`);
+    }
+    console.log('');
+    console.log('Get detailed info:  cybersec-report skills info <name>');
+  });
+
+skillsCommand
+  .command('info <name>')
+  .description('Show metadata for a specific skill')
+  .action(async (name) => {
+    const yamlPath = join(__dirname, 'skills', name, 'skill.yaml');
+    let doc;
+    try {
+      const raw = readFileSync(yamlPath, 'utf-8');
+      doc = parseYaml(raw);
+    } catch {
+      console.error(`Skill "${name}" not found.`);
+      console.error(`Run "cybersec-report skills list" to see available skills.`);
+      process.exit(1);
+    }
+    console.log(`Skill: ${doc.name || name}`);
+    console.log(`Version: ${doc.version || '1.0.0'}`);
+    console.log(`Description: ${(doc.description || '').replace(/\n+/g, ' ').trim()}`);
+    console.log(`Tags: ${(doc.tags || []).join(', ') || 'none'}`);
+    console.log(`Categories: ${(doc.categories || []).join(', ') || 'none'}`);
+    console.log(`Config: skills/${name}/skill.yaml`);
+    console.log(`Prompt: skills/${name}/SKILL.md`);
+    if (doc.workflows && Object.keys(doc.workflows).length > 0) {
+      console.log(`Workflows: ${Object.keys(doc.workflows).join(', ')}`);
+    }
+    if (doc.validation_rules && doc.validation_rules.length > 0) {
+      console.log(`Validation rules: ${doc.validation_rules.length}`);
+    }
+  });
+
+skillsCommand.action(async () => {
+  console.log('Use "skills list" or "skills info <name>".');
+});
+
+// ---------------------------------------------------------------------------
 // init
 // ---------------------------------------------------------------------------
 
