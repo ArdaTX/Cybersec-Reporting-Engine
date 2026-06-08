@@ -50,13 +50,13 @@ node cli.js generate -i ./my-project/findings/sample-findings.yaml -o ./my-proje
 
 ```bash
 node cli.js generate -i <file>          # Generate report from findings
-node cli.js validate -i <file>            # Validate findings against schema
-node cli.js skills list                   # List all available skills
-node cli.js skills info <name>            # Show metadata for a skill
-node cli.js theme list                    # List available themes
-node cli.js template list                 # List available templates
-node cli.js init -d <dir>                 # Initialize a new project
-node cli.js serve -p 3000                 # Start local report viewer
+node cli.js validate -i <file>          # Validate findings against schema
+node cli.js skills list                 # List all available skills
+node cli.js skills info <name>          # Show metadata for a skill
+node cli.js theme list                  # List available themes
+node cli.js template list               # List available templates
+node cli.js init -d <dir>               # Initialize a new project
+node cli.js serve -p 3000               # Start local report viewer
 ```
 
 ---
@@ -70,11 +70,11 @@ cybersec-reporting-engine/
 ├── requirements.txt                # Python dependencies (DOCX)
 ├── .cybersecrc.yaml                # Default configuration
 │
-├── templates/                      # Report templates
-│   └── finding-schema/             # Canonical finding schema
-│       └── finding-schema.yaml     # Validation schema for findings
+├── AGENTS.md                       # Universal AI agent entry point
+├── SKILLS_INDEX.yaml               # Machine-readable skill catalog
+├── SKILLS_INDEX.md                 # Human-readable skill table
 │
-├── skills/                         # AI agent skill definitions
+├── skills/                         # 11 AI agent skill definitions
 │   ├── universal-report-engine/
 │   ├── pentest-report/
 │   ├── redteam-report/
@@ -87,6 +87,13 @@ cybersec-reporting-engine/
 │   ├── threat-hunting-report/
 │   └── compliance-report/
 │       └── Each contains: SKILL.md, skill.yaml
+│
+├── scripts/
+│   └── sync-skills.js              # Auto-generates all skill indices
+│
+├── templates/
+│   └── finding-schema/             # Canonical finding schema
+│       └── finding-schema.yaml     # Validation schema for findings
 │
 ├── outputs/                        # Output generators
 │   ├── markdown/                   # Markdown generator + template engine
@@ -101,8 +108,7 @@ cybersec-reporting-engine/
 │   ├── ad/
 │   ├── ir/
 │   ├── forensics/
-│   ├── compliance/
-│   └── ...
+│   └── compliance/
 │
 ├── knowledge/                      # Framework and methodology references
 │   ├── frameworks/                 # CVSS, CWE, MITRE ATT&CK, NIST, OWASP, etc.
@@ -149,7 +155,7 @@ Run `node cli.js validate -i findings.yaml` to validate against the schema.
 
 ---
 
-## AI Agent Support
+## Skill Auto-Discovery for AI Agents
 
 This repository implements a universal skill auto-discovery protocol so AI agents (Claude Code, OpenCode, Cursor, etc.) can discover available capabilities without manual configuration.
 
@@ -162,11 +168,18 @@ Each skill in `skills/` includes:
 - **`SKILL.md`** — Full system prompt and workflow guide
 - **`skill.yaml`** — Structured metadata, validation rules, and schemas
 
-**Adding a new skill?** Regenerate all index files:
+**Adding or modifying a skill?** Regenerate all index files:
+
 ```bash
 npm run sync:skills
 ```
-This updates `SKILLS_INDEX.yaml` and per-agent indices in `.agents/`, `.claude/`, and `.opencode/`.
+
+This updates:
+- `SKILLS_INDEX.yaml`
+- `SKILLS_INDEX.md`
+- `.agents/skills/skills-index.yaml`
+- `.claude/skills/skills-index.yaml`
+- `.opencode/skills/skills-index.yaml`
 
 ---
 
