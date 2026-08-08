@@ -46,7 +46,7 @@
     "jsonschema": "^1.4.1",
     "marked": "^12.0.2",
     "marked-highlight": "^2.1.3",
-    "mermaid": "^10.9.1",
+    "mermaid": "^10.9.8",
     "puppeteer": "^22.12.1",
     "yaml": "^2.4.5"
   },
